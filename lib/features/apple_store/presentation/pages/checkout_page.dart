@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:state_management/core/models/cart_state.dart';
+import 'package:state_management/features/apple_store/presentation/widgets/payment_option_tile.dart';
 
 class CheckoutPage extends StatefulWidget {
   final CartState state;
@@ -36,24 +37,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
               const SizedBox(height: 32),
               
-              _PaymentOption(
-                index: 0,
+              PaymentOptionTile(
                 title: 'Apple Pay',
                 icon: Icons.apple,
                 isSelected: selectedPayment == 0,
                 onTap: () => setState(() => selectedPayment = 0),
               ),
               const SizedBox(height: 16),
-              _PaymentOption(
-                index: 1,
+              PaymentOptionTile(
                 title: 'Credit or Debit Card',
                 icon: Icons.credit_card,
                 isSelected: selectedPayment == 1,
                 onTap: () => setState(() => selectedPayment = 1),
               ),
               const SizedBox(height: 16),
-              _PaymentOption(
-                index: 2,
+              PaymentOptionTile(
                 title: 'PayPal',
                 icon: Icons.payment,
                 isSelected: selectedPayment == 2,
@@ -125,55 +123,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PaymentOption extends StatelessWidget {
-  final int index;
-  final String title;
-  final IconData icon;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _PaymentOption({
-    required this.index,
-    required this.title,
-    required this.icon,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF007AFF) : Colors.black12,
-            width: 2,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: 28, color: isSelected ? const Color(0xFF007AFF) : Colors.black),
-            const SizedBox(width: 16),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-            const Spacer(),
-            if (isSelected)
-              const Icon(Icons.check_circle, color: Color(0xFF007AFF)),
-          ],
         ),
       ),
     );

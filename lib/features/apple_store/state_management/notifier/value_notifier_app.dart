@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:state_management/features/apple_store/presentation/pages/home_page.dart';
-import 'package:state_management/features/apple_store/presentation/pages/product_detail_page.dart';
-import 'package:state_management/features/apple_store/presentation/pages/cart_page.dart';
-import 'package:state_management/features/apple_store/presentation/pages/checkout_page.dart';
-import 'package:state_management/features/apple_store/presentation/pages/order_success_page.dart';
+import 'package:state_management/features/apple_store/presentation/widgets/apple_store_flow_builder.dart';
 import 'cart_value_notifier.dart';
 
 class ValueNotifierApp extends StatefulWidget {
@@ -28,56 +24,18 @@ class _ValueNotifierAppState extends State<ValueNotifierApp> {
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
           builder: (context) {
+            // 使用 ValueListenableBuilder 監聽 ValueNotifier 的變化
             return ValueListenableBuilder(
               valueListenable: _notifier,
               builder: (context, state, child) {
-                return HomePage(
-                  stateManagementTitle: 'ValueNotifier',
-                  cartItemCount: state.itemCount,
-                  onProductTap: (product) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProductDetailPage(
-                          product: product,
-                          onAddToCart: (item) => _notifier.addToCart(item),
-                        ),
-                      ),
-                    );
-                  },
-                  onCartTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CartPage(
-                          state: state,
-                          onUpdateQuantity: (item, qty) => _notifier.updateQuantity(item, qty),
-                          onRemoveItem: (item) => _notifier.removeItem(item),
-                          onCheckout: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CheckoutPage(
-                                  state: state,
-                                  onComplete: () {
-                                    _notifier.clearCart();
-                                    Navigator.of(context).popUntil((route) => route.isFirst);
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => OrderSuccessPage(
-                                          onContinueShopping: () => Navigator.of(context).pop(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  },
+                return buildAppleStoreFlow(
+                  context: context,
+                  title: 'ValueNotifier',
+                  state: state,
+                  onAddToCart: _notifier.addToCart,
+                  onUpdateQuantity: _notifier.updateQuantity,
+                  onRemoveItem: _notifier.removeItem,
+                  onClearCart: _notifier.clearCart,
                 );
               },
             );

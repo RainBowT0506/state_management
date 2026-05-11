@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:state_management/core/models/cart_state.dart';
 import 'package:state_management/core/models/cart_item.dart';
-import 'package:state_management/core/models/product.dart';
-import 'package:state_management/features/apple_store/presentation/pages/home_page.dart';
-import 'package:state_management/features/apple_store/presentation/pages/product_detail_page.dart';
-import 'package:state_management/features/apple_store/presentation/pages/cart_page.dart';
-import 'package:state_management/features/apple_store/presentation/pages/checkout_page.dart';
-import 'package:state_management/features/apple_store/presentation/pages/order_success_page.dart';
+import 'package:state_management/features/apple_store/presentation/widgets/apple_store_flow_builder.dart';
 
 class VanillaApp extends StatefulWidget {
   const VanillaApp({super.key});
@@ -16,11 +11,13 @@ class VanillaApp extends StatefulWidget {
 }
 
 class _VanillaAppState extends State<VanillaApp> {
+  // 全域購物車狀態，儲存於最頂層 Widget
   CartState _cartState = CartState();
 
+  // 新增商品到購物車
   void _addToCart(CartItem item) {
     setState(() {
-      // Check if item already exists with same options
+      // 檢查購物車中是否已存在相同規格的商品
       final existingIndex = _cartState.items.indexWhere((i) => 
         i.product.id == item.product.id && 
         i.selectedColor.name == item.selectedColor.name && 
@@ -29,15 +26,18 @@ class _VanillaAppState extends State<VanillaApp> {
       );
 
       if (existingIndex >= 0) {
+        // 如果存在，則增加數量
         final List<CartItem> newItems = List.from(_cartState.items);
         newItems[existingIndex].quantity += 1;
         _cartState = _cartState.copyWith(items: newItems);
       } else {
+        // 如果不存在，則新增項目
         _cartState = _cartState.copyWith(items: [..._cartState.items, item]);
       }
     });
   }
 
+  // 更新購物車商品數量
   void _updateQuantity(CartItem item, int quantity) {
     setState(() {
       final List<CartItem> newItems = _cartState.items.map((i) {
@@ -50,6 +50,7 @@ class _VanillaAppState extends State<VanillaApp> {
     });
   }
 
+  // 從購物車移除項目
   void _removeItem(CartItem item) {
     setState(() {
       final newItems = _cartState.items.where((i) => i.id != item.id).toList();
@@ -57,6 +58,7 @@ class _VanillaAppState extends State<VanillaApp> {
     });
   }
 
+  // 清空購物車（用於結帳完成後）
   void _clearCart() {
     setState(() {
       _cartState = CartState();
@@ -68,66 +70,14 @@ class _VanillaAppState extends State<VanillaApp> {
     return Navigator(
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
-          builder: (context) => HomePage(
-            stateManagementTitle: 'Vanilla',
-            cartItemCount: _cartState.itemCount,
-            onProductTap: (product) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProductDetailPage(
-                    product: product,
-                    onAddToCart: _addToCart,
-                  ),
-                ),
-              );
-            },
-            onCartTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CartPage(
-                    state: _cartState,
-                    onUpdateQuantity: _updateQuantity,
-                    onRemoveItem: (item) {
-                      _removeItem(item);
-                      // Auto-return if empty is handled by CartPage's builder if we were using a builder
-                      // but here we just let the user stay or pop
-                    },
-                    onCheckout: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CheckoutPage(
-                            state: _cartState,
-                            onComplete: () {
-                              _clearCart();
-                              // First, pop back to the Home page (closes Checkout and Cart)
-                              Navigator.of(context).popUntil((route) => route.isFirst);
-                              // Then push the Success page on top of Home
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => OrderSuccessPage(
-                                    onContinueShopping: () {
-                                      Navigator.of(context).pop(); // Returns to Home
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ).then((_) {
-                // If the user returns and the cart is empty, we could pop again but usually staying is fine
-                if (_cartState.items.isEmpty && Navigator.canPop(context)) {
-                  // This is tricky in vanilla without a proper state listener
-                }
-              });
-            },
+          builder: (context) => buildAppleStoreFlow(
+            context: context,
+            title: 'Vanilla',
+            state: _cartState,
+            onAddToCart: _addToCart,
+            onUpdateQuantity: _updateQuantity,
+            onRemoveItem: _removeItem,
+            onClearCart: _clearCart,
           ),
         );
       },

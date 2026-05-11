@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:state_management/core/models/cart_state.dart';
 import 'package:state_management/core/models/cart_item.dart';
 
+// 使用 ValueNotifier 管理狀態，它直接持有一個值 (value)
 class CartValueNotifier extends ValueNotifier<CartState> {
+  // 初始化時傳入初始狀態
   CartValueNotifier() : super(CartState());
 
   void addToCart(CartItem item) {
@@ -16,6 +18,7 @@ class CartValueNotifier extends ValueNotifier<CartState> {
     if (existingIndex >= 0) {
       final List<CartItem> newItems = List.from(value.items);
       newItems[existingIndex].quantity += 1;
+      // 直接修改 value 就會自動觸發監聽者刷新
       value = value.copyWith(items: newItems);
     } else {
       value = value.copyWith(items: [...value.items, item]);

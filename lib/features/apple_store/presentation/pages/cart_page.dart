@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:state_management/core/models/cart_state.dart';
 import 'package:state_management/core/models/cart_item.dart';
+import 'package:state_management/features/apple_store/presentation/widgets/cart_item_tile.dart';
+import 'package:state_management/features/apple_store/presentation/widgets/summary_row.dart';
 
 class CartPage extends StatelessWidget {
   final CartState state;
@@ -77,72 +79,11 @@ class CartPage extends StatelessWidget {
                 separatorBuilder: (_, __) => const Divider(height: 48),
                 itemBuilder: (context, index) {
                   final item = state.items[index];
-                  return FadeInLeft(
-                    delay: Duration(milliseconds: 100 * index),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF5F5F7),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Image.network(item.selectedColor.imageUrl),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.product.name,
-                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                '${item.selectedColor.name} | ${item.selectedStorage.size}',
-                                style: const TextStyle(color: Colors.black54),
-                              ),
-                              if (item.hasAppleCare)
-                                const Text(
-                                  'with AppleCare+',
-                                  style: TextStyle(color: Colors.red, fontSize: 12),
-                                ),
-                              const SizedBox(height: 12),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  _QuantitySelector(
-                                    quantity: item.quantity,
-                                    onChanged: (val) => onUpdateQuantity(item, val),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => onRemoveItem(item),
-                                    style: TextButton.styleFrom(
-                                      padding: EdgeInsets.zero,
-                                      minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    child: const Text('Remove', style: TextStyle(color: Color(0xFF007AFF), fontSize: 14)),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              currencyFormat.format(item.totalPrice),
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                  return CartItemTile(
+                    item: item,
+                    index: index,
+                    onUpdateQuantity: (val) => onUpdateQuantity(item, val),
+                    onRemove: () => onRemoveItem(item),
                   );
                 },
               ),
@@ -152,13 +93,13 @@ class CartPage extends StatelessWidget {
               // Summary
               Column(
                 children: [
-                  _SummaryRow(label: 'Subtotal', value: currencyFormat.format(state.subtotal)),
+                  SummaryRow(label: 'Subtotal', value: currencyFormat.format(state.subtotal)),
                   const SizedBox(height: 12),
-                  _SummaryRow(label: 'Shipping', value: 'FREE'),
+                  SummaryRow(label: 'Shipping', value: 'FREE'),
                   const SizedBox(height: 12),
-                  _SummaryRow(label: 'Estimated Tax', value: '\$0.00'),
+                  SummaryRow(label: 'Estimated Tax', value: '\$0.00'),
                   const Divider(height: 32),
-                  _SummaryRow(
+                  SummaryRow(
                     label: 'Total', 
                     value: currencyFormat.format(state.total),
                     isTotal: true,
@@ -176,73 +117,6 @@ class CartPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _QuantitySelector extends StatelessWidget {
-  final int quantity;
-  final ValueChanged<int> onChanged;
-
-  const _QuantitySelector({required this.quantity, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 36,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black12),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            onPressed: quantity > 1 ? () => onChanged(quantity - 1) : null,
-            icon: const Icon(Icons.remove, size: 14),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-          ),
-          Text('$quantity', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-          IconButton(
-            onPressed: () => onChanged(quantity + 1),
-            icon: const Icon(Icons.add, size: 14),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SummaryRow extends StatelessWidget {
-  final String label;
-  final String value;
-  final bool isTotal;
-
-  const _SummaryRow({required this.label, required this.value, this.isTotal = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: isTotal ? 20 : 16,
-            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: isTotal ? 20 : 16,
-            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ],
     );
   }
 }

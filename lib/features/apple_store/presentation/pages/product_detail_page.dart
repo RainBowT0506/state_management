@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:state_management/core/models/product.dart';
 import 'package:state_management/core/models/cart_item.dart';
+import 'package:state_management/features/apple_store/presentation/widgets/color_selector.dart';
+import 'package:state_management/features/apple_store/presentation/widgets/storage_selector.dart';
+import 'package:state_management/features/apple_store/presentation/widgets/apple_care_tile.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Product product;
@@ -105,149 +108,29 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   
                   const SizedBox(height: 40),
                   
-                  // Color Selection
-                  const Text(
-                    'Finish. Pick your favorite.',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 60,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: widget.product.availableColors.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 12),
-                      itemBuilder: (context, index) {
-                        final colorOption = widget.product.availableColors[index];
-                        final isSelected = selectedColor == colorOption;
-                        return GestureDetector(
-                          onTap: () => setState(() => selectedColor = colorOption),
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: colorOption.color,
-                              border: Border.all(
-                                color: isSelected ? const Color(0xFF007AFF) : Colors.transparent,
-                                width: 3,
-                              ),
-                              boxShadow: [
-                                if (isSelected)
-                                  BoxShadow(
-                                    color: const Color(0xFF007AFF).withOpacity(0.3),
-                                    blurRadius: 10,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Text(
-                    selectedColor.name,
-                    style: const TextStyle(fontSize: 14, color: Colors.black54, height: 2),
+                  ColorSelector(
+                    colors: widget.product.availableColors,
+                    selectedColor: selectedColor,
+                    onColorSelected: (color) => setState(() => selectedColor = color),
                   ),
                   
                   const SizedBox(height: 40),
                   
-                  // Storage Selection
-                  const Text(
-                    'Storage. How much space do you need?',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: widget.product.storageOptions.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final storage = widget.product.storageOptions[index];
-                      final isSelected = selectedStorage == storage;
-                      return GestureDetector(
-                        onTap: () => setState(() => selectedStorage = storage),
-                        child: Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isSelected ? const Color(0xFF007AFF) : Colors.black12,
-                              width: 2,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                storage.size,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                ),
-                              ),
-                              Text(
-                                storage.extraPrice == 0 
-                                  ? 'Included' 
-                                  : '+\$${storage.extraPrice.toInt()}',
-                                style: const TextStyle(color: Colors.black54),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                  StorageSelector(
+                    options: widget.product.storageOptions,
+                    selectedOption: selectedStorage,
+                    onOptionSelected: (option) => setState(() => selectedStorage = option),
                   ),
                   
                   const SizedBox(height: 40),
                   
                   // Apple Care+
-                  if (widget.product.appleCareAvailable) ...[
-                    const Text(
-                      'AppleCare+ coverage. Protect your new iPhone.',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
-                    GestureDetector(
+                  if (widget.product.appleCareAvailable)
+                    AppleCareTile(
+                      price: widget.product.appleCarePrice,
+                      isSelected: hasAppleCare,
                       onTap: () => setState(() => hasAppleCare = !hasAppleCare),
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: hasAppleCare ? const Color(0xFF007AFF) : Colors.black12,
-                            width: 2,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.security, color: Colors.red, size: 30),
-                            const SizedBox(width: 16),
-                            const Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'AppleCare+',
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    'Coverage for accidental damage',
-                                    style: TextStyle(fontSize: 12, color: Colors.black54),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              '+\$${widget.product.appleCarePrice.toInt()}',
-                              style: const TextStyle(color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                      ),
                     ),
-                  ],
                   
                   const SizedBox(height: 100), // Space for bottom bar
                 ],
