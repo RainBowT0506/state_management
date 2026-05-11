@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import '../pages/home_page.dart';
 import '../../state_management/vanilla/vanilla_app.dart';
-import '../../state_management/notifier/notifier_app.dart';
-import '../../state_management/notifier/value_notifier_app.dart';
+import '../../state_management/change_notifier/notifier_app.dart';
+import '../../state_management/value_notifier/value_notifier_app.dart';
+import '../../state_management/provider/provider_app.dart';
 import '../widgets/architecture_card.dart';
 
 class ArchitectureSelectorPage extends StatelessWidget {
@@ -62,6 +63,13 @@ class ArchitectureSelectorPage extends StatelessWidget {
                       subtitle: 'Native ValueNotifier + ValueListenableBuilder',
                       color: Colors.purple,
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ValueNotifierApp())),
+                    ),
+                    const SizedBox(height: 16),
+                    ArchitectureCard(
+                      title: 'Provider',
+                      subtitle: 'Advanced Provider usage (context.watch)',
+                      color: Colors.indigo,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProviderApp())),
                     ),
                   ],
                 ),
