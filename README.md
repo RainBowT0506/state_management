@@ -15,20 +15,22 @@
 
 ---
 
-## 🛠 目前實作狀態：No State Management (Vanilla)
+## 🛠 目前實作狀態
 
-專案的第一階段已完成 **「無狀態管理套件」** 的原生版本。
+專案已支援多種架構切換：
 
-### 設計特點
+### 1. No State Management (Vanilla)
 - **架構基礎**：使用 `setState` 配合 `StatefulWidget` 管理狀態。
-- **狀態傳遞**：採用 **Property Drilling** 模式，將購物車狀態 (`CartState`) 與操作函數從頂層透過建構子向下傳遞。
-- **優點**：不依賴任何外部套件，適合理解 Flutter 原生渲染原理。
-- **挑戰**：隨著頁面深度增加，參數傳遞會變得繁瑣。
+- **狀態傳遞**：採用 **Property Drilling** 模式，將購物車狀態透過建構子向下傳遞。
 
-### 核心檔案
-- `lib/main.dart`: 應用程式進入點。
-- `lib/features/apple_store/state_management/vanilla/vanilla_app.dart`: Vanilla 狀態容器。
-- `lib/features/apple_store/presentation/`: 共用的 UI 頁面與組件。
+### 2. ChangeNotifier (Provider)
+- **架構基礎**：使用 `ChangeNotifier` 類別並配合 `Provider` 套件。
+- **優點**：減少了參數傳遞的繁瑣，透過 `Consumer` 實現局部刷新，是 Flutter 最主流的入門架構。
+
+### 3. ValueNotifier
+- **架構基礎**：使用 Flutter 原生的 `ValueNotifier` 類別。
+- **監聽方式**：使用 `ValueListenableBuilder` 監聽單一值的變化。
+- **優點**：輕量級且無需依賴第三方套件。
 
 ---
 
@@ -36,22 +38,22 @@
 ```text
 lib/
 ├── core/               # 核心定義 (Models, Constants, Theme)
-│   ├── models/         # 領域模型 (Product, CartItem, CartState)
-│   └── theme/          # Apple 風格設計規範
 ├── features/           # 功能模組
 │   └── apple_store/
-│       ├── presentation/ # 共用 UI 介面 (Pages, Widgets)
-│       └── state_management/ # 各種架構實作 (Vanilla, Provider, etc.)
-└── main.dart           # 入口
+│       ├── presentation/ # 共用 UI 介面 (首頁、詳情、購物車、結帳)
+│       └── state_management/ 
+│           ├── vanilla/   # Vanilla 實作
+│           └── notifier/  # ChangeNotifier & ValueNotifier 實作
+└── main.dart           # 入口 (架構選擇器)
 ```
 
 ---
 
 ## 🗺 路線圖 (Roadmap)
-接下來我們將依序導入以下架構：
 - [x] **Vanilla (setState)** - 已完成
-- [ ] **ChangeNotifier / ValueNotifier**
-- [ ] **Provider**
+- [x] **ChangeNotifier** - 已完成
+- [x] **ValueNotifier** - 已完成
+- [ ] **Provider (Advanced)**
 - [ ] **Riverpod**
 - [ ] **BLoC / Cubit**
 - [ ] **GetX**

@@ -69,6 +69,7 @@ class _VanillaAppState extends State<VanillaApp> {
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
           builder: (context) => HomePage(
+            stateManagementTitle: 'Vanilla',
             cartItemCount: _cartState.itemCount,
             onProductTap: (product) {
               Navigator.push(

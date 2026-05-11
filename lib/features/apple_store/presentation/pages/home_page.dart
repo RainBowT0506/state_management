@@ -7,12 +7,14 @@ import 'package:state_management/features/apple_store/presentation/widgets/cart_
 
 class HomePage extends StatelessWidget {
   final int cartItemCount;
+  final String stateManagementTitle;
   final Function(Product) onProductTap;
   final VoidCallback onCartTap;
 
   const HomePage({
     super.key,
     required this.cartItemCount,
+    required this.stateManagementTitle,
     required this.onProductTap,
     required this.onCartTap,
   });
@@ -29,9 +31,9 @@ class HomePage extends StatelessWidget {
             floating: false,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
-                'Store',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              title: Text(
+                'Store ($stateManagementTitle)',
+                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
               centerTitle: false,
               titlePadding: const EdgeInsetsDirectional.only(start: 20, bottom: 16),

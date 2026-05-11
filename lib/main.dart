@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/theme/apple_theme.dart';
-import 'features/apple_store/state_management/vanilla/vanilla_app.dart';
+import 'features/apple_store/presentation/pages/architecture_selector_page.dart';
 
 void main() {
   runApp(const AppleStorePlayground());
@@ -15,7 +15,7 @@ class AppleStorePlayground extends StatelessWidget {
       title: 'Apple Store Playground',
       theme: AppleTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-      home: const VanillaApp(),
+      home: const ArchitectureSelectorPage(),
     );
   }
 }
