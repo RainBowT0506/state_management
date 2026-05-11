@@ -28,6 +28,17 @@ class ProviderApp extends StatelessWidget {
                 onUpdateQuantity: controller.updateQuantity,
                 onRemoveItem: controller.removeItem,
                 onClearCart: controller.clearCart,
+                cartPageBuilder: (context) {
+                  // 在這裡使用 Consumer 或 watch 來確保 CartPage 是響應式的
+                  final currentController = context.watch<CartController>();
+                  return buildCommonCartPage(
+                    context: context,
+                    state: currentController.state,
+                    onUpdateQuantity: currentController.updateQuantity,
+                    onRemoveItem: currentController.removeItem,
+                    onClearCart: currentController.clearCart,
+                  );
+                },
               );
             },
           );

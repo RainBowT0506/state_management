@@ -6,7 +6,7 @@ class CartItem {
   final ProductColor selectedColor;
   final StorageOption selectedStorage;
   final bool hasAppleCare;
-  int quantity;
+  final int quantity;
 
   CartItem({
     required this.id,

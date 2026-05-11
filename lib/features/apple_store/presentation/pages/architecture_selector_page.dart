@@ -5,6 +5,7 @@ import '../../state_management/vanilla/vanilla_app.dart';
 import '../../state_management/change_notifier/notifier_app.dart';
 import '../../state_management/value_notifier/value_notifier_app.dart';
 import '../../state_management/provider/provider_app.dart';
+import '../../state_management/riverpod/riverpod_app.dart';
 import '../widgets/architecture_card.dart';
 
 class ArchitectureSelectorPage extends StatelessWidget {
@@ -70,6 +71,13 @@ class ArchitectureSelectorPage extends StatelessWidget {
                       subtitle: 'Advanced Provider usage (context.watch)',
                       color: Colors.indigo,
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProviderApp())),
+                    ),
+                    const SizedBox(height: 16),
+                    ArchitectureCard(
+                      title: 'Riverpod',
+                      subtitle: 'Modern Notifier + ProviderScope',
+                      color: Colors.teal,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RiverpodApp())),
                     ),
                   ],
                 ),

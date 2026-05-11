@@ -36,6 +36,18 @@ class _ValueNotifierAppState extends State<ValueNotifierApp> {
                   onUpdateQuantity: _notifier.updateQuantity,
                   onRemoveItem: _notifier.removeItem,
                   onClearCart: _notifier.clearCart,
+                  cartPageBuilder: (context) => ValueListenableBuilder(
+                    valueListenable: _notifier,
+                    builder: (context, currentState, _) {
+                      return buildCommonCartPage(
+                        context: context,
+                        state: currentState,
+                        onUpdateQuantity: _notifier.updateQuantity,
+                        onRemoveItem: _notifier.removeItem,
+                        onClearCart: _notifier.clearCart,
+                      );
+                    },
+                  ),
                 );
               },
             );

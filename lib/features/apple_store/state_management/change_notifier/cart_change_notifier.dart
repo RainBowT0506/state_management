@@ -21,7 +21,9 @@ class CartChangeNotifier extends ChangeNotifier {
 
     if (existingIndex >= 0) {
       final List<CartItem> newItems = List.from(_state.items);
-      newItems[existingIndex].quantity += 1;
+      newItems[existingIndex] = newItems[existingIndex].copyWith(
+        quantity: newItems[existingIndex].quantity + 1,
+      );
       _state = _state.copyWith(items: newItems);
     } else {
       _state = _state.copyWith(items: [..._state.items, item]);

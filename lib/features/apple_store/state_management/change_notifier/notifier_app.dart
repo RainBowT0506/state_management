@@ -26,6 +26,17 @@ class NotifierApp extends StatelessWidget {
                     onUpdateQuantity: notifier.updateQuantity,
                     onRemoveItem: notifier.removeItem,
                     onClearCart: notifier.clearCart,
+                    cartPageBuilder: (context) => Consumer<CartChangeNotifier>(
+                      builder: (context, currentNotifier, _) {
+                        return buildCommonCartPage(
+                          context: context,
+                          state: currentNotifier.state,
+                          onUpdateQuantity: currentNotifier.updateQuantity,
+                          onRemoveItem: currentNotifier.removeItem,
+                          onClearCart: currentNotifier.clearCart,
+                        );
+                      },
+                    ),
                   );
                 },
               );

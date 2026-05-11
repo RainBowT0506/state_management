@@ -18,6 +18,7 @@ Widget buildAppleStoreFlow({
   required Function(CartItem, int) onUpdateQuantity,
   required Function(CartItem) onRemoveItem,
   required VoidCallback onClearCart,
+  required Widget Function(BuildContext) cartPageBuilder,
 }) {
   return HomePage(
     stateManagementTitle: title,
@@ -37,27 +38,39 @@ Widget buildAppleStoreFlow({
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => CartPage(
+          builder: cartPageBuilder,
+        ),
+      );
+    },
+  );
+}
+
+/// 建立共用的 CartPage，供各架構在 builder 中呼叫
+Widget buildCommonCartPage({
+  required BuildContext context,
+  required CartState state,
+  required Function(CartItem, int) onUpdateQuantity,
+  required Function(CartItem) onRemoveItem,
+  required VoidCallback onClearCart,
+}) {
+  return CartPage(
+    state: state,
+    onUpdateQuantity: onUpdateQuantity,
+    onRemoveItem: onRemoveItem,
+    onCheckout: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => CheckoutPage(
             state: state,
-            onUpdateQuantity: onUpdateQuantity,
-            onRemoveItem: onRemoveItem,
-            onCheckout: () {
-              Navigator.push(
-                context,
+            onComplete: () {
+              onClearCart();
+              final navigator = Navigator.of(context);
+              navigator.popUntil((route) => route.isFirst);
+              navigator.push(
                 MaterialPageRoute(
-                  builder: (_) => CheckoutPage(
-                    state: state,
-                    onComplete: () {
-                      onClearCart();
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => OrderSuccessPage(
-                            onContinueShopping: () => Navigator.of(context).pop(),
-                          ),
-                        ),
-                      );
-                    },
+                  builder: (context) => OrderSuccessPage(
+                    onContinueShopping: () => Navigator.of(context).pop(),
                   ),
                 ),
               );

@@ -14,6 +14,15 @@ class _VanillaAppState extends State<VanillaApp> {
   // 全域購物車狀態，儲存於最頂層 Widget
   CartState _cartState = CartState();
 
+  // 用於通知子路由（如購物車頁面）更新的 ValueNotifier
+  final ValueNotifier<CartState> _cartNotifier = ValueNotifier(CartState());
+
+  @override
+  void dispose() {
+    _cartNotifier.dispose();
+    super.dispose();
+  }
+
   // 新增商品到購物車
   void _addToCart(CartItem item) {
     setState(() {
@@ -28,12 +37,15 @@ class _VanillaAppState extends State<VanillaApp> {
       if (existingIndex >= 0) {
         // 如果存在，則增加數量
         final List<CartItem> newItems = List.from(_cartState.items);
-        newItems[existingIndex].quantity += 1;
+        newItems[existingIndex] = newItems[existingIndex].copyWith(
+          quantity: newItems[existingIndex].quantity + 1,
+        );
         _cartState = _cartState.copyWith(items: newItems);
       } else {
         // 如果不存在，則新增項目
         _cartState = _cartState.copyWith(items: [..._cartState.items, item]);
       }
+      _cartNotifier.value = _cartState;
     });
   }
 
@@ -47,6 +59,7 @@ class _VanillaAppState extends State<VanillaApp> {
         return i;
       }).toList();
       _cartState = _cartState.copyWith(items: newItems);
+      _cartNotifier.value = _cartState;
     });
   }
 
@@ -55,6 +68,7 @@ class _VanillaAppState extends State<VanillaApp> {
     setState(() {
       final newItems = _cartState.items.where((i) => i.id != item.id).toList();
       _cartState = _cartState.copyWith(items: newItems);
+      _cartNotifier.value = _cartState;
     });
   }
 
@@ -62,6 +76,7 @@ class _VanillaAppState extends State<VanillaApp> {
   void _clearCart() {
     setState(() {
       _cartState = CartState();
+      _cartNotifier.value = _cartState;
     });
   }
 
@@ -78,6 +93,18 @@ class _VanillaAppState extends State<VanillaApp> {
             onUpdateQuantity: _updateQuantity,
             onRemoveItem: _removeItem,
             onClearCart: _clearCart,
+            cartPageBuilder: (context) => ValueListenableBuilder(
+              valueListenable: _cartNotifier,
+              builder: (context, currentState, _) {
+                return buildCommonCartPage(
+                  context: context,
+                  state: currentState,
+                  onUpdateQuantity: _updateQuantity,
+                  onRemoveItem: _removeItem,
+                  onClearCart: _clearCart,
+                );
+              },
+            ),
           ),
         );
       },
