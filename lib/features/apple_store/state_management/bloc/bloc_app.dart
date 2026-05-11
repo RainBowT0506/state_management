@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:state_management/features/apple_store/presentation/widgets/apple_store_flow_builder.dart';
+import 'package:state_management/core/models/cart_state.dart';
 import 'cart_cubit.dart';
 
 class BlocApp extends StatelessWidget {
