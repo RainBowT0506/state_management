@@ -8,6 +8,7 @@ import '../../state_management/provider/provider_app.dart';
 import '../../state_management/riverpod/riverpod_app.dart';
 import '../../state_management/bloc/bloc_app.dart';
 import '../../state_management/getx/getx_app.dart';
+import '../../state_management/redux/redux_app.dart';
 import '../widgets/architecture_card.dart';
 
 class ArchitectureSelectorPage extends StatelessWidget {
@@ -94,6 +95,13 @@ class ArchitectureSelectorPage extends StatelessWidget {
                       subtitle: 'Simple & Powerful state management (.obs)',
                       color: Colors.pink[600]!,
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GetXApp())),
+                    ),
+                    const SizedBox(height: 16),
+                    ArchitectureCard(
+                      title: 'Redux',
+                      subtitle: 'Predictable state container (Actions & Reducers)',
+                      color: Colors.blueGrey[800]!,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReduxApp())),
                     ),
                   ],
                 ),
