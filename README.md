@@ -12,6 +12,7 @@
   - AppleCare+ 保固加購。
   - 全域購物車狀態同步。
   - 模擬國際支付 (Apple Pay / PayPal / Card)。
+- **完整單元測試**：為所有狀態管理架構編寫了核心邏輯測試，確保功能正確性。
 
 ---
 
@@ -89,6 +90,11 @@ lib/
    ```bash
    flutter pub get
    flutter run
+   ```
+
+3. **執行測試**：
+   ```bash
+   flutter test
    ```
 
 ---
