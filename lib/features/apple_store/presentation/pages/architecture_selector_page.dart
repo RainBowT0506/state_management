@@ -6,6 +6,7 @@ import '../../state_management/change_notifier/notifier_app.dart';
 import '../../state_management/value_notifier/value_notifier_app.dart';
 import '../../state_management/provider/provider_app.dart';
 import '../../state_management/riverpod/riverpod_app.dart';
+import '../../state_management/bloc/bloc_app.dart';
 import '../widgets/architecture_card.dart';
 
 class ArchitectureSelectorPage extends StatelessWidget {
@@ -78,6 +79,13 @@ class ArchitectureSelectorPage extends StatelessWidget {
                       subtitle: 'Modern Notifier + ProviderScope',
                       color: Colors.teal,
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RiverpodApp())),
+                    ),
+                    const SizedBox(height: 16),
+                    ArchitectureCard(
+                      title: 'BLoC / Cubit',
+                      subtitle: 'Stream-based state with BlocProvider',
+                      color: Colors.orange[700]!,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BlocApp())),
                     ),
                   ],
                 ),
